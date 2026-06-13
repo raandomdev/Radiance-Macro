@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiance Macro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- LEFT SIDEBAR (Tab Switches) -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>Radiance Macro</h2>
+                <div class="version">v0.0.0 (Release)</div>
+                <div class="status">Status: <span class="status-indicator online"></span> IDLE</div>
+                <div class="mt-2"><button class="btn btn-primary" onclick="startMacro()">Start/Stop </button></div>
+            </div>
+
+            <nav class="tab-nav">
+                <div class="nav-section">
+                    <div class="section-title">General</div>
+                    <ul>
+                        <li data-tab="notice" class="active">Notice</li>
+                        <li data-tab="webhook">Webhook</li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="section-title">Macro Settings</div>
+                    <ul>
+                        <li data-tab="automated">Automated actions</li>
+                        <li data-tab="calibrations">Macro Calibrations</li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="section-title">MAIN FEATURES</div>
+                    <ul>
+                        <li class="detection">Detection</li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="section-title">Other</div>
+                    <ul>
+                        <li class="credits">📚 Credits</li>
+                        <li class="donations">💖 Donations</li>
+                    </ul>
+                </div>"
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA (changes based on selected tab) -->
+        <main class="content-area">
+            <div id="notice-content" class="tab-content active">
+                <h1>Notice</h1>
+                <p>Welcome to Radiance Macro. All systems are operational.</p>
+                <div class="card">
+                    <p><h1>Radiance Macro</h1>
+                    <br><h2>V0.0.0 (What's New?)</h2>
+                    <br><h3>Features:</h3>
+                    <br>- Aura Equip! (In Automated actions)
+                    <br>- Webhook support for external intergations
+                    <br>- Macro calibrations for 100% accuracy on mouse clicking
+                    <br>- Biome/Aura detection with 99.99% accuracy!
+                </p>
+                </div>
+            </div>
+
+            <div id="webhook-content" class="tab-content">
+                <h1>Webhook</h1>
+                <p>Manage incoming and outgoing webhooks for automation.</p>
+                <div class="card">
+                    <label>Webhook URL</label>
+                    <input type="text" placeholder="https://api.example.com/webhook" value="https://radiance    .io/hook">
+                    <button class="mt-2">Test Connection</button>
+                </div>
+            </div>
+
+            <div id="automated-content" class="tab-content">
+                <h1>Automated actions</h1>
+                <p>Schedule and manage recurring tasks.</p>
+                <div class="card">
+                    <label class="toggle-label">
+                        <span class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </span>
+                        Enable auto‑backup
+                    </label>
+                    <label class="toggle-label">
+                        <span class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </span>
+                        Log every action
+                    </label>
+                </div>
+            </div>
+
+            <div id="calibrations-content" class="tab-content">
+                <h1>Macro Calibrations</h1>
+                <p>Fine‑tune sensitivity and thresholds.</p>
+                <div class="card">
+                    <label>Sensitivity</label>
+                    <input type="range" min="0" max="100" value="72">
+                    <label>Delay (ms)</label>
+                    <input type="number" value="250" step="10">
+                </div>
+            </div>
+
+            <div id="detection-content" class="tab-content">
+                <h1>Detection</h1>
+                <p>Configure detection settings for optimal performance.</p>
+                <div class="card">
+                    <label>Enable Biome Detection</label>
+                    <input type="checkbox" checked>
+                    <br><br>
+                    <label>Enable Aura Detection</label>
+                    <input type="checkbox" checked>
+                </div>
+            </div>
+
+            <div id="credits-content" class="tab-content">
+                <h1>Credits</h1>
+                <p>Developers who made this macro possible!</p>
+                <div class="card">
+                    <ul>
+                        <li>Spacedev0572 - Lead Developer</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>Inspiration</h2>
+                    <ul>
+                        <li>Coteab Developments</li>
+                        <li class="image-credits">
+                            <img src="lib/dist/coteab.png" alt="Coteab Logo" class="credit-logo">
+                        </li>       
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Tab switching logic
+        const tabItems = document.querySelectorAll('.tab-nav li');
+        const contents = document.querySelectorAll('.tab-content');
+
+        function switchTab(tabId) {
+            // Hide all contents
+            contents.forEach(content => content.classList.remove('active'));
+            // Show selected
+            const activeContent = document.getElementById(`${tabId}-content`);
+            if (activeContent) activeContent.classList.add('active');
+
+            // Update active class on nav items
+            tabItems.forEach(item => item.classList.remove('active'));
+            const activeNav = document.querySelector(`.tab-nav li[data-tab="${tabId}"]`);
+            if (activeNav) activeNav.classList.add('active');
+        }
+
+        tabItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const tabId = item.getAttribute('data-tab');
+                if (tabId) switchTab(tabId);
+            });
+        });
+
+        function startMacro() {
+            if (window.pywebview) {
+                window.pywebview.api.start_macro();
+            } else {
+                console.warn("pywebview API not available");
+            }
+        }
+
+        // Set default active (Notice)
+        switchTab('credits');
+    </script>
+</body>
+</html>
